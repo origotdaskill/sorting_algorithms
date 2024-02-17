@@ -2,111 +2,51 @@
 #include <stdlib.h>
 
 /**
- * create_count_array - Creates an array to store the count of each element
- * @array: The input array
- * @size: The size of the input array
- * @max: The maximum value in the input array
- * Return: The created count array
- */
-int *create_count_array(int *array, size_t size, int max)
-{
-	int *count;
-	size_t j;
-
-	count = malloc((max + 1) * sizeof(int));
-	if (count == NULL)
-		return (NULL);
-	for (j = 0; j <= (size_t)max; j++)
-		count[j] = 0;
-	for (j = 0; j < size; j++)
-		count[array[j]]++;
-	return (count);
-}
-
-/**
- * create_temp_array - Creates a temporary array for sorting
- * @size: The size of the array
- * Return: The created temporary array
- */
-int *create_temp_array(size_t size)
-{
-	return (malloc(size * sizeof(int)));
-}
-
-/**
- * update_count_array - Updates the count array to contain the numbersy
- * @count: The count array to be updated
- * @max: The maximum value in the array
- */
-void update_count_array(int *count, int max)
-{
-	int d;
-
-	for (d = 1; d <= max; d++)
-		count[d] += count[d - 1];
-}
-
-/**
- * copy_sorted_elements - Copies sorted elements back into the original array
- * @array: The original array
- * @temp: The temporary array containing sorted elements
- * @size: The size of the array
- */
-void copy_sorted_elements(int *array, int *temp, size_t size)
-{
-	size_t f;
-
-	for (f = 0; f < size; f++)
-		array[f] = temp[f];
-}
-
-/**
- * counting_sort - Sorts an array of integers in ascending order using Counting
- * @array: Array to be sorted
- * @size: Size of the array
+ * counting_sort - Sorts an array of integers in ascending order using the Counting sort algorithm
+ * @array: The array to be sorted
+ * @size: Number of elements in the array
  */
 void counting_sort(int *array, size_t size)
 {
-	int max = array[0];
-	size_t i;
-	int *count, *temp;
-	int k;
+    int *counting_array, *sorted_array;
+    int max_value = 0;
+    size_t i;
 
-	if (array == NULL || size < 2)
-		return;
+    if (array == NULL || size < 2)
+        return;
 
-	/* Find the maximum value in the array */
-	for (i = 1; i < size; i++)
-	{
-		if (array[i] > max)
-			max = array[i];
-	}
+    for (i = 0; i < size; i++) {
+        if (array[i] > max_value)
+            max_value = array[i];
+    }
 
-	count = create_count_array(array, size, max);
-	if (count == NULL)
-		return;
+    counting_array = malloc(sizeof(int) * (max_value + 1));
+    sorted_array = malloc(sizeof(int) * size);
+    if (counting_array == NULL || sorted_array == NULL) {
+        free(counting_array);
+        free(sorted_array);
+        return;
+    }
 
-	update_count_array(count, max);
-	temp = create_temp_array(size);
-	if (temp == NULL)
-	{
-		free(count);
-		return;
-	}
+    for (i = 0; i <= (size_t)max_value; i++)
+        counting_array[i] = 0;
 
-	/* Place the elements in sorted order into the temporary array */
-	for (k = size - 1; k >= 0; k--)
-	{
-		temp[count[array[k]] - 1] = array[k];
-		count[array[k]]--;
-	}
+    for (i = 0; i < size; i++)
+        counting_array[array[i]]++;
 
-	copy_sorted_elements(array, temp, size);
+    for (i = 1; i <= (size_t)max_value; i++)
+        counting_array[i] += counting_array[i - 1];
 
-	/* Print the counting array */
-	print_array(count, max + 1);
+    for (i = 0; i < size; i++) {
+        sorted_array[counting_array[array[i]] - 1] = array[i];
+        counting_array[array[i]]--;
+    }
 
-	/* Free allocated memory */
-	free(count);
-	free(temp);
+    for (i = 0; i < size; i++)
+        array[i] = sorted_array[i];
+
+    print_array(counting_array, max_value + 1);
+
+    free(counting_array);
+    free(sorted_array);
 }
