@@ -6,7 +6,7 @@
  * in ascending order using the Counting sort algorithm
  * @array: The array to be sorted
  * @size: Number of elements in the array
- */
+ */
 void counting_sort(int *array, size_t size)
 {
 	int *counting_array, *sorted_array;
@@ -47,7 +47,7 @@ void counting_sort(int *array, size_t size)
 	}
 
 	for (i = 0; i < size; i++)
-	array[i] = sorted_array[i];
+		array[i] = sorted_array[i];
 
 	print_array(counting_array, max_value + 1);
 	free(counting_array);
