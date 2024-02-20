@@ -1,47 +1,62 @@
 #include "sort.h"
-#include <stdlib.h>
+#include <stdio.h>
 
+/**
+ * _calloc - this is a calloc function
+ * @nmemb: number of elements
+ * @size: bit size of each element
+ *
+ * Return: pointer to memory assignment
+ */
+void *_calloc(unsigned int nmemb, unsigned int size)
+{
+	unsigned int i = 0;
+	char *p;
+
+	if (nmemb == 0 || size == 0)
+		return ('\0');
+	p = malloc(nmemb * size);
+	if (!p)
+		return ('\0');
+	for (i = 0; i < (nmemb * size); i++)
+		p[i] = '\0';
+	return (p);
+}
+
+/**
+ * counting_sort - this is a counting sort method implementation
+ * @array: array to sort
+ * @size: array size
+ */
 void counting_sort(int *array, size_t size)
 {
-    size_t i;
-    int max = array[0];
-    int *counting_array = malloc((max + 1) * sizeof(int));
-        int j = 0;
+	int index, maximum = 0, *counter = '\0', *tmp = '\0';
+	size_t i;
 
+	if (!array || size < 2)
+		return;
+	for (i = 0; i < size; i++)
+	{
+		if (array[i] > maximum)
+		{
+			maximum = array[i];
+		}
+	}
+	counter = _calloc((maximum + 1), sizeof(int));
+	tmp = _calloc(size + 1, sizeof(int));
+	for (i = 0; i < size; i++)
+		counter[array[i]]++;
+	for (index = 1; index <= maximum; index++)
+		counter[index] += counter[index - 1];
+	print_array(counter, (maximum + 1));
+	for (i = 0; i < size; ++i)
+	{
+		tmp[counter[array[i]] - 1] = array[i];
+		counter[array[i]]--;
+	}
+	for (i = 0; i < size; i++)
+		array[i] = tmp[i];
+	free(tmp);
+	free(counter);
 
-
-    /* Find the maximum value in the array */
-    for (i = 1; i < size; i++)
-    {
-        if (array[i] > max)
-            max = array[i];
-    }
-
-    /* Allocate memory for the counting array */
-    if (counting_array == NULL)
-    {
-        free(counting_array);
-        return;
-    }
-
-    for (i = 0; i <= (size_t)max; i++)
-        counting_array[i] = 0;
-
-    for (i = 0; i < size; i++)
-        counting_array[array[i]]++;
-
-    print_array(counting_array, max + 1);
-
-    /* Update array with sorted elements */
-    for (i = 0; i <= (size_t)max; i++)
-    {
-        while (counting_array[i] > 0)
-        {
-            array[j++] = (int)i;
-            counting_array[i]--;
-        }
-    }
-
-    /* Free dynamically allocated memory */
-    free(counting_array);
 }
