@@ -1,6 +1,6 @@
 #include "sort.h"
 #include <stdio.h>
-#include <stdlib.h>
+
 /**
  * getMax - A utility function to get maximum value in arr[]
  * @arr: array
