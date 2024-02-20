@@ -107,3 +107,4 @@ void merge_sort(int *array, size_t size)
 	mergesort(array, tmp, 0, size - 1);
 	free(tmp);
 }
+
